@@ -1,0 +1,28 @@
+{
+  "name": "walk-in-bath-playwright-tests",
+  "version": "1.0.0",
+  "description": "End-to-end automated test suite for a walk-in bath landing page, implemented with Playwright and TypeScript. The suite covers high-priority user scenarios related to form validation, service availability, and successful submission flow.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MilosDjurovic/walk-in-bath-playwright-tests.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MilosDjurovic/walk-in-bath-playwright-tests/issues"
+  },
+  "homepage": "https://github.com/MilosDjurovic/walk-in-bath-playwright-tests#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
