@@ -174,6 +174,7 @@ Selection rationale:
 ## CI
 
 GitHub Actions workflow is included in `.github/workflows/playwright.yml` and runs tests on push and pull requests to `main`.
+You can also run it manually from **Actions -> Playwright Tests -> Run workflow** and provide any branch, tag, or commit SHA in the `branch` input.
 
 ## Future Improvements (2-4)
 
