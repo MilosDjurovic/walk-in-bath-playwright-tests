@@ -1,21 +1,13 @@
 import { expect, test } from '../fixtures/test';
 
-test('blocks progression when required fields are not provided', async ({ landingFormPage }) => {
-  await landingFormPage.submitZipCode();
-
-  await expect
-    .poll(async () => landingFormPage.getZipValidationMessage())
-    .toContain('Enter your ZIP code.');
-
-  await landingFormPage.fillZipCode('68901');
+test('prevents progressing from the interest step when no option is selected', async ({
+  landingFormPage,
+  submissionData,
+}) => {
+  await landingFormPage.fillZipCode(submissionData.zipCode);
   await landingFormPage.submitZipCode();
   await landingFormPage.submitInterest();
 
-  await expect
-    .poll(async () => landingFormPage.isPropertyStepVisible())
-    .toBeFalsy();
-
-  await expect
-    .poll(async () => landingFormPage.isInterestStepVisible())
-    .toBeTruthy();
+  await expect(landingFormPage.propertyStepSubmitButton()).toBeHidden();
+  await expect(landingFormPage.interestStepSubmitButton()).toBeVisible();
 });

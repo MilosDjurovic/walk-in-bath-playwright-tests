@@ -5,7 +5,9 @@ test('shows out-of-area branch for ZIP outside service area', async ({ landingFo
   await landingFormPage.fillZipCode(zipCodes.outOfArea);
   await landingFormPage.submitZipCode();
 
-  await expect.poll(async () => landingFormPage.isOutOfAreaMessageVisible()).toBeTruthy();
+  await expect(landingFormPage.outOfAreaMessage()).toBeVisible();
+  await expect(landingFormPage.outOfAreaEmailInput()).toBeVisible();
+  await expect(landingFormPage.interestStepSubmitButton()).toBeHidden();
+  await expect(landingFormPage.phoneStepSubmitButton()).toBeHidden();
   await expect(landingFormPage.page).not.toHaveURL(/\/thankyou$/);
-  await expect.poll(async () => landingFormPage.isOutOfAreaEmailVisible()).toBeTruthy();
 });

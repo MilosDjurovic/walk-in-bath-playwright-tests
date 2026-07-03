@@ -19,14 +19,18 @@ export const validSubmissionData: WalkInBathSubmissionData = {
 export const zipCodes = {
   serviceAvailable: '68901',
   outOfArea: '11111',
-  invalidLength: '123456',
+  invalidTooShort: '1234',
+  invalidTooLong: '123456',
+  invalidNonDigit: '12a45',
 };
 
 export const invalidEmails = {
   missingAt: 'invalid-email',
+  missingDomain: 'user@',
 };
 
 export const invalidPhones = {
   tooShort: '123456789',
+  tooLong: '12345678901',
   withLetters: '12345abcde',
 };

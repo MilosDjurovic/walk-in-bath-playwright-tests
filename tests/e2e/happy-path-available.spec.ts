@@ -9,6 +9,10 @@ test('submits successfully for service-available ZIP and redirects to thank-you 
     submissionData.fullName,
     submissionData.email,
   );
+
+  await expect(landingFormPage.phoneStepSubmitButton()).toBeVisible();
+  await expect(landingFormPage.page).not.toHaveURL(/\/thankyou$/);
+
   await landingFormPage.fillPhone(submissionData.phone);
   await landingFormPage.submitPhoneStep();
 
