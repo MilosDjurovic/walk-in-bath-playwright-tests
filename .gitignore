@@ -4,3 +4,4 @@ test-results/
 blob-report/
 *.log
 .DS_Store
+README_tmp.html
