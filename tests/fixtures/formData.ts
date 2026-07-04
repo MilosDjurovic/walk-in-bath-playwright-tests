@@ -1,7 +1,13 @@
+export const interestOptions = ['Independence', 'Safety', 'Therapy', 'Other'] as const;
+export type InterestOption = (typeof interestOptions)[number];
+
+export const propertyTypeOptions = ['Owned House / Condo', 'Rental Property', 'Mobile Home'] as const;
+export type PropertyTypeOption = (typeof propertyTypeOptions)[number];
+
 export type WalkInBathSubmissionData = {
   zipCode: string;
-  interest: 'Independence' | 'Safety' | 'Therapy' | 'Other';
-  propertyType: 'Owned House / Condo' | 'Rental Property' | 'Mobile Home';
+  interest: InterestOption;
+  propertyType: PropertyTypeOption;
   fullName: string;
   email: string;
   phone: string;
@@ -27,10 +33,17 @@ export const zipCodes = {
 export const invalidEmails = {
   missingAt: 'invalid-email',
   missingDomain: 'user@',
+  missingLocalPart: '@example.com',
+  doubleAt: 'user@@example.com',
+  withWhitespace: 'user name@example.com',
+  malformedDomainDots: 'user@example..com',
+  missingDotCom: 'user@example',
 };
 
 export const invalidPhones = {
-  tooShort: '123456789',
-  tooLong: '12345678901',
-  withLetters: '12345abcde',
+  tooShort: '987654321',
+  tooLong: '98765432109',
+  withLetters: '98765abcde',
+  withSpecialChars: '98765$#@!@',
+  allZeros: '0000000000',
 };
