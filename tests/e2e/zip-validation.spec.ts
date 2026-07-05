@@ -1,14 +1,8 @@
 import { expect, test } from "../fixtures/test";
-import { invalidZipCodes } from "../fixtures/formData";
+import { invalidZipCodeValues } from "../fixtures/formData";
 
 test.describe("ZIP code step", () => {
-  const invalidZipCodeCases = [
-    invalidZipCodes.tooShort,
-    invalidZipCodes.tooLong,
-    invalidZipCodes.nonDigit,
-  ];
-
-  invalidZipCodeCases.forEach((invalidZipCode) => {
+  invalidZipCodeValues.forEach((invalidZipCode) => {
     test(`rejects invalid ZIP code: ${invalidZipCode}`, async ({
       landingFormPage,
       submissionData,

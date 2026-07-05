@@ -12,6 +12,9 @@ type Fixtures = {
   submissionData: WalkInBathSubmissionData;
 };
 
+const randomizeSubmissionData =
+  process.env.PLAYWRIGHT_RANDOMIZE_DATA?.toLowerCase() === "true";
+
 function pickRandomOption<T extends readonly string[]>(options: T): T[number] {
   return options[Math.floor(Math.random() * options.length)];
 }
@@ -40,13 +43,17 @@ export const test = base.extend<Fixtures>({
     await use(landingFormPage);
   },
   submissionData: async ({}, use) => {
-    await use({
+    const randomizedSubmissionData: WalkInBathSubmissionData = {
       ...validSubmissionData,
       interest: pickRandomOption(interestOptions),
       propertyType: pickRandomOption(propertyTypeOptions),
       email: generateRandomEmail(),
       phone: generateRandomPhone(),
-    });
+    };
+
+    await use(
+      randomizeSubmissionData ? randomizedSubmissionData : validSubmissionData,
+    );
   },
 });
 

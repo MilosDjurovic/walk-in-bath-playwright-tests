@@ -42,6 +42,12 @@ export const invalidZipCodes = {
   nonDigit: "12a45",
 };
 
+export const invalidZipCodeValues = [
+  invalidZipCodes.tooShort,
+  invalidZipCodes.tooLong,
+  invalidZipCodes.nonDigit,
+] as const;
+
 export const invalidEmails = {
   missingAt: "invalid-email",
   missingDomain: "user@",
@@ -52,7 +58,22 @@ export const invalidEmails = {
   missingDotCom: "user@example",
 };
 
+export const invalidEmailValues = [
+  invalidEmails.missingAt,
+  invalidEmails.missingDomain,
+  invalidEmails.missingLocalPart,
+  invalidEmails.doubleAt,
+  invalidEmails.withWhitespace,
+  invalidEmails.malformedDomainDots,
+  invalidEmails.missingDotCom,
+] as const;
+
 export const invalidPhones = {
   tooShort: "987654321",
   allZeros: "0000000000",
 };
+
+export const invalidPhoneValues = [
+  invalidPhones.tooShort,
+  invalidPhones.allZeros,
+] as const;

@@ -37,6 +37,12 @@ npm run test:headed
 npm run test:ui
 ```
 
+5. Optional: randomize generated fixture data (interest/property/email/phone):
+
+```bash
+PLAYWRIGHT_RANDOMIZE_DATA=true npm test
+```
+
 6. Optional: run against a different environment:
 
 ```bash
@@ -77,6 +83,8 @@ npm run test:report
 
 - Setup reuse is implemented with Playwright fixtures in `tests/fixtures/test.ts` via `test.extend`.
 - Shared context (page object + canonical test data) is injected into tests rather than manually initialized in each spec.
+- Fixture data is deterministic by default for reproducible failures; randomized fixture values are available via `PLAYWRIGHT_RANDOMIZE_DATA=true` when broader coverage is needed.
+- Shared flow helpers in `tests/e2e/helpers/landingFormFlow.ts` standardize repeated multi-step navigation and masked phone typing to reduce duplication and flaky input behavior, while assertions remain in specs for readability.
 - Assertions are kept in test files only.
 - `LandingFormPage` contains actions and state accessors with single-responsibility methods.
 - In a few transition-sensitive checks (notably in `required-fields.spec.ts`), short explicit waits are used intentionally. While fixed waits are generally a bad practice, they are necessary here to let UI transitions settle and produce more precise assertion results.
@@ -179,10 +187,10 @@ Selection rationale:
 - Actual: inputs and progression state are mirrored between the middle and bottom forms (changes in one are reflected in the other). Additionally, when starting from the bottom form at Step 1 and clicking Next, the page auto-scrolls to the middle form. This auto-scroll does not occur in the reverse direction and does not occur for subsequent steps.
 - Impact: this creates a confusing and inconsistent experience, can make users think context has changed unexpectedly, and increases risk of funnel tracking ambiguity because interactions are split between two visible instances of the same flow.
 
-11. Email step accepts test@test submission without a top-level domain.
+11. Email step accepts missing top-level-domain submissions (for example, test@test and user@example).
 
 - Expected: the email field must validate the standard structure of an email address, requiring a valid domain suffix (e.g., .com, .org, .net). Entering an address missing a top-level domain should display a validation error and keep the user on the step until corrected.
-- Actual: entering an incomplete email format like test@test bypasses validation, allowing the user to successfully progress past the email step.
+- Actual: entering incomplete email formats missing a top-level domain (for example, test@test and user@example) bypasses validation, allowing the user to successfully progress past the email step.
 - Impact: broken and unroutable email addresses enter the database, causing immediate bounce-backs, skewing email marketing metrics, and degrading overall lead quality.
 
 12. Phone input allows typing from any cursor position.
@@ -190,6 +198,12 @@ Selection rationale:
 - Expected: phone number entry should be constrained to a consistent left-to-right input flow, with digits entered from the beginning of the field.
 - Actual: user can click anywhere inside the phone field and start entering numbers from that selected index onward.
 - Impact: this can lead to confusing input behavior, incomplete or incorrectly positioned phone numbers, and higher risk of users entering invalid data without immediately understanding why.
+
+13. Location messaging is inconsistent across the landing page.
+
+- Expected: location-specific content should be consistent across the page and aligned with the service area being promoted.
+- Actual: the page displays different location references in separate sections, such as Vienna/Belgrade (in user location) and Michigan.
+- Impact: inconsistent location messaging may confuse users about where the service is actually available. Since the form uses ZIP code to determine service availability, conflicting location references could reduce trust and make the offer feel less accurate or less localized.
 
 ## CI
 
@@ -203,3 +217,4 @@ You can also run it manually from **Actions -> Playwright Tests -> Run workflow*
 3. Add linting/formatting checks (ESLint + Prettier) in CI for stricter code quality gates.
 4. Add trace-on-retry triage helper scripts for faster failure analysis.
 5. Add a scroll-position assertion to verify that the active multi-step form remains the viewport focus after each step transition. (bug #10)
+6. Optionally quarantine known product defects with `test.fixme` (with linked defect IDs) so CI can stay stable while retaining explicit defect coverage in the suite.

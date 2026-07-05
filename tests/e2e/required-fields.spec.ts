@@ -1,4 +1,9 @@
 import { expect, test } from "../fixtures/test";
+import {
+  enterPhoneNumber,
+  expectPhoneError,
+  openPhoneStepFromContactDetails,
+} from "./helpers/landingFormFlow";
 
 test("enforces required selections and inputs before allowing submission", async ({
   landingFormPage,
@@ -25,9 +30,7 @@ test("enforces required selections and inputs before allowing submission", async
   await landingFormPage.page.waitForTimeout(1000);
 
   await expect(form.interestOption(submissionData.interest)).toBeVisible();
-  await expect(
-    form.container.getByText("Choose one of the variants."),
-  ).toBeVisible(); // This is an assumption that the error message should exist here, as it does in the following step
+  await expect(form.variantSelectionErrorMessage).toBeVisible(); // This is an assumption that the error message should exist here, as it does in the following step
   await expect(
     form.propertyTypeOption(submissionData.propertyType),
   ).toBeHidden();
@@ -64,23 +67,17 @@ test("enforces required selections and inputs before allowing submission", async
   await expect(form.emailInput).toBeVisible();
   await expect(form.phoneInput).toBeHidden();
 
-  await form.nameInput.fill(submissionData.fullName);
-  await form.emailInput.fill(submissionData.email);
-  await form.goToEstimateButton.click();
-  await expect(form.phoneInput).toBeVisible();
+  await openPhoneStepFromContactDetails(form, submissionData);
 
   await form.submitRequestButton.click();
   // Allow UI transition to settle before asserting final state.
   await landingFormPage.page.waitForTimeout(1000);
 
-  await expect(
-    form.container.getByText("Enter your phone number."),
-  ).toBeVisible();
-  await expect(form.phoneInput).toBeVisible();
+  await expectPhoneError(form, "required");
   await expect(landingFormPage.page).not.toHaveURL(/\/thankyou$/);
   await expect(landingFormPage.thankYouHeading).not.toBeVisible();
 
-  await form.phoneInput.fill(submissionData.phone);
+  await enterPhoneNumber(form, submissionData.phone);
   await form.submitRequestButton.click();
 
   await expect(landingFormPage.page).toHaveURL(/\/thankyou$/);
