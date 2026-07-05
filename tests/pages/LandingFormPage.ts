@@ -38,7 +38,7 @@ export class LandingFormPage {
   readonly thankYouHeading: Locator;
 
   constructor(page: Page) {
-    this.url = "https://test-qa.capslock.global/";
+    this.url = process.env.PLAYWRIGHT_BASE_URL ?? "https://test-qa.capslock.global/";
     this.page = page;
     this.form1 = this.buildFormLocators("#form-container-1");
     this.form2 = this.buildFormLocators("#form-container-2");
