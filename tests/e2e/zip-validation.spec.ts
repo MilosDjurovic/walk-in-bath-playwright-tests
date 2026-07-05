@@ -12,8 +12,7 @@ test.describe("ZIP code step", () => {
       await expect(form.zipInput).toBeVisible();
       await form.zipInput.fill(invalidZipCode);
       await form.nextButton.click();
-      // Allow UI transition to settle before asserting final state.
-      await landingFormPage.page.waitForTimeout(1000);
+      await expect(form.zipErrorMessage).toBeVisible();
 
       await expect(form.zipErrorMessage).toHaveText("Wrong ZIP code.");
       await expect(form.zipInput).toBeVisible();
