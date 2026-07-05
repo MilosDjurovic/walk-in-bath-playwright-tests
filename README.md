@@ -113,10 +113,7 @@ Additional implemented guardrail scenario:
 
 6. `zip-validation.spec.ts` (grouped ZIP-step coverage for both required and exact-5-digit validation)
 
-Optional defect-focused regression scenario:
-
-7. `duplicate-form-consistency.spec.ts` (light expected-behavior coverage for bug #10)
-
+Optional defect-focused regression scenarios can be added later (for example, for bug #10).
 Selection rationale:
 
 - These scenarios validate the core business path and highest-risk validation gates.
