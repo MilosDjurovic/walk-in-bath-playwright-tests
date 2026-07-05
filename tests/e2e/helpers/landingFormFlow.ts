@@ -49,8 +49,7 @@ export async function enterPhoneNumber(
 ): Promise<void> {
   await expect(form.phoneInput).toBeVisible();
   await form.phoneInput.click();
-  await form.phoneInput.press("Control+A");
-  await form.phoneInput.press("Backspace");
+  await form.phoneInput.press("ControlOrMeta+A");
 
   // Use real key events for masked inputs; fill() can be flaky with some masks.
   await form.phoneInput.pressSequentially(phoneNumber);
