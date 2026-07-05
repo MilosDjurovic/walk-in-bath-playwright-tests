@@ -49,7 +49,7 @@ PLAYWRIGHT_RANDOMIZE_DATA=true npm test
 PLAYWRIGHT_BASE_URL=https://your-env.example.com npm test
 ```
 
-5. Open HTML report after execution:
+7. Open HTML report after execution:
 
 ```bash
 npm run test:report
