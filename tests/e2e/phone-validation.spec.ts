@@ -20,8 +20,7 @@ test.describe("phone validation", () => {
 
       await enterPhoneNumber(form, invalidPhone);
       await form.submitRequestButton.click();
-      // Allow UI transition to settle before asserting final state.
-      await landingFormPage.page.waitForTimeout(1000);
+      await expect(form.phoneErrorMessage).toBeVisible();
       await expectPhoneError(form, "invalid");
     });
   });
