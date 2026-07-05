@@ -62,7 +62,6 @@ npm run test:report
 ├── .github/workflows/playwright.yml
 ├── tests/
 │   ├── e2e/
-│   │   ├── duplicate-form-consistency.spec.ts
 │   │   ├── email-validation.spec.ts
 │   │   ├── happy-path-available.spec.ts
 │   │   ├── out-of-area.spec.ts
