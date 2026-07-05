@@ -30,7 +30,7 @@ test("enforces required selections and inputs before allowing submission", async
   await landingFormPage.page.waitForTimeout(1000);
 
   await expect(form.interestOption(submissionData.interest)).toBeVisible();
-  await expect(form.variantSelectionErrorMessage).toBeVisible(); // This is an assumption that the error message should exist here, as it does in the following step
+  await expect(form.variantSelectionErrorMessage).toBeVisible();
   await expect(
     form.propertyTypeOption(submissionData.propertyType),
   ).toBeHidden();
