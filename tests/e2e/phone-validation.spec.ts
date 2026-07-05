@@ -1,69 +1,43 @@
-// import { expect, test } from '../fixtures/test';
-// import { invalidPhones } from '../fixtures/formData';
+import { expect, test } from "../fixtures/test";
+import { invalidPhones } from "../fixtures/formData";
 
-// test.describe('phone validation', () => {
-//   const blockingInvalidPhoneCases = [
-//     {
-//       label: 'too short',
-//       phone: invalidPhones.tooShort,
-//       assertion: (normalized: string) => expect(normalized.length).toBeLessThan(10),
-//     },
-//     {
-//       label: 'with letters',
-//       phone: invalidPhones.withLetters,
-//       assertion: (normalized: string) => expect(normalized.length).toBeLessThan(10),
-//     },
-//   ];
+test.describe("phone validation", () => {
+  const invalidPhoneCases = Object.values(invalidPhones);
 
-//   test('normalizes too-long phone input to supported length', async ({
-//     landingFormPage,
-//     submissionData,
-//   }) => {
-//     await landingFormPage.completeFlowBeforePhoneStep(
-//       submissionData.zipCode,
-//       submissionData.fullName,
-//       submissionData.email,
-//     );
+  invalidPhoneCases.forEach((invalidPhone) => {
+    test(`blocks progression for invalid phone number: ${invalidPhone}`, async ({
+      landingFormPage,
+      submissionData,
+    }) => {
+      const form = landingFormPage.form1;
 
-//     await landingFormPage.fillPhone(invalidPhones.tooLong);
+      await form.zipInput.fill(submissionData.zipCode);
+      await form.nextButton.click();
+      await expect(form.interestOption(submissionData.interest)).toBeVisible();
 
-//     const normalizedValue = await landingFormPage.getPhoneInputValue();
-//     expect(normalizedValue.replace(/\D/g, '').length).toBeLessThanOrEqual(10);
-//   });
+      await form.interestOption(submissionData.interest).click();
+      await form.nextButton.click();
+      await expect(
+        form.propertyTypeOption(submissionData.propertyType),
+      ).toBeVisible();
 
-//   blockingInvalidPhoneCases.forEach(({ label, phone, assertion }) => {
-//     test(`prevents submission for invalid phone (${label})`, async ({
-//       landingFormPage,
-//       submissionData,
-//     }) => {
-//       await landingFormPage.completeFlowBeforePhoneStep(
-//         submissionData.zipCode,
-//         submissionData.fullName,
-//         submissionData.email,
-//       );
-//       await landingFormPage.fillPhone(phone);
-//       await landingFormPage.submitPhoneStep();
+      await form.propertyTypeOption(submissionData.propertyType).click();
+      await form.nextButton.click();
+      await expect(form.nameInput).toBeVisible();
+      await expect(form.emailInput).toBeVisible();
 
-//       await expect(landingFormPage.page).not.toHaveURL(/\/thankyou$/);
-//       await expect(landingFormPage.phoneStepSubmitButton()).toBeVisible();
+      await form.nameInput.fill(submissionData.fullName);
+      await form.emailInput.fill(submissionData.email);
+      await form.goToEstimateButton.click();
+      await expect(form.phoneInput).toBeVisible();
 
-//       const currentValue = await landingFormPage.getPhoneInputValue();
-//       assertion(currentValue.replace(/\D/g, ''));
-//     });
-//   });
-
-//   test('accepts valid 10-digit phone and submits successfully', async ({
-//     landingFormPage,
-//     submissionData,
-//   }) => {
-//     await landingFormPage.completeFlowBeforePhoneStep(
-//       submissionData.zipCode,
-//       submissionData.fullName,
-//       submissionData.email,
-//     );
-//     await landingFormPage.fillPhone(submissionData.phone);
-//     await landingFormPage.submitPhoneStep();
-
-//     await expect(landingFormPage.page).toHaveURL(/\/thankyou$/);
-//   });
-// });
+      await form.phoneInput.fill(invalidPhone);
+      await form.submitRequestButton.click();
+      // Allow UI transition to settle before asserting final state.
+      await landingFormPage.page.waitForTimeout(1000);
+      await expect(form.phoneInput).toBeVisible();
+      await expect(form.phoneErrorMessage).toBeVisible();
+      await expect(form.phoneErrorMessage).toHaveText("Wrong phone number.");
+    });
+  });
+});

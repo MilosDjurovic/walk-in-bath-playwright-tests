@@ -1,8 +1,8 @@
-import { expect, test } from '../fixtures/test';
+import { expect, test } from "../fixtures/test";
 
 const formCases = [
-  { formKey: 'form1' as const, formLabel: 'form container 1' },
-  { formKey: 'form2' as const, formLabel: 'form container 2' },
+  { formKey: "form1" as const, formLabel: "form container 1" },
+  { formKey: "form2" as const, formLabel: "form container 2" },
 ];
 
 formCases.forEach(({ formKey, formLabel }) => {
@@ -22,7 +22,9 @@ formCases.forEach(({ formKey, formLabel }) => {
     await form.interestOption(submissionData.interest).click();
     await form.nextButton.click();
 
-    await expect(form.propertyTypeOption(submissionData.propertyType)).toBeVisible();
+    await expect(
+      form.propertyTypeOption(submissionData.propertyType),
+    ).toBeVisible();
 
     await form.propertyTypeOption(submissionData.propertyType).click();
     await form.nextButton.click();
@@ -41,6 +43,6 @@ formCases.forEach(({ formKey, formLabel }) => {
 
     await expect(page).toHaveURL(/\/thankyou$/);
     await expect(landingFormPage.thankYouHeading).toBeVisible();
-    await expect(landingFormPage.thankYouHeading).toHaveText('Thank you!');
+    await expect(landingFormPage.thankYouHeading).toHaveText("Thank you!");
   });
 });

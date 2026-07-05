@@ -1,11 +1,11 @@
-import { test as base } from '@playwright/test';
+import { test as base } from "@playwright/test";
 import {
   interestOptions,
   propertyTypeOptions,
   validSubmissionData,
   WalkInBathSubmissionData,
-} from './formData';
-import { LandingFormPage } from '../pages/LandingFormPage';
+} from "./formData";
+import { LandingFormPage } from "../pages/LandingFormPage";
 
 type Fixtures = {
   landingFormPage: LandingFormPage;
@@ -24,7 +24,7 @@ function generateRandomEmail(): string {
 
 function generateRandomPhone(): string {
   const firstDigit = Math.floor(Math.random() * 8) + 2;
-  let rest = '';
+  let rest = "";
 
   for (let i = 0; i < 9; i += 1) {
     rest += Math.floor(Math.random() * 10).toString();
@@ -50,4 +50,4 @@ export const test = base.extend<Fixtures>({
   },
 });
 
-export { expect } from '@playwright/test';
+export { expect } from "@playwright/test";

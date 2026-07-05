@@ -1,7 +1,16 @@
-export const interestOptions = ['Independence', 'Safety', 'Therapy', 'Other'] as const;
+export const interestOptions = [
+  "Independence",
+  "Safety",
+  "Therapy",
+  "Other",
+] as const;
 export type InterestOption = (typeof interestOptions)[number];
 
-export const propertyTypeOptions = ['Owned House / Condo', 'Rental Property', 'Mobile Home'] as const;
+export const propertyTypeOptions = [
+  "Owned House / Condo",
+  "Rental Property",
+  "Mobile Home",
+] as const;
 export type PropertyTypeOption = (typeof propertyTypeOptions)[number];
 
 export type WalkInBathSubmissionData = {
@@ -14,36 +23,36 @@ export type WalkInBathSubmissionData = {
 };
 
 export const validSubmissionData: WalkInBathSubmissionData = {
-  zipCode: '68901',
-  interest: 'Independence',
-  propertyType: 'Owned House / Condo',
-  fullName: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '4025551212',
+  zipCode: "68901",
+  interest: "Independence",
+  propertyType: "Owned House / Condo",
+  fullName: "John Doe",
+  email: "john.doe@example.com",
+  phone: "4025551212",
 };
 
 export const zipCodes = {
-  serviceAvailable: '68901',
-  outOfArea: '11111',
-  invalidTooShort: '1234',
-  invalidTooLong: '123456',
-  invalidNonDigit: '12a45',
+  serviceAvailable: "68901",
+  outOfArea: "11111",
+};
+
+export const invalidZipCodes = {
+  tooShort: "1234",
+  tooLong: "123456",
+  nonDigit: "12a45",
 };
 
 export const invalidEmails = {
-  missingAt: 'invalid-email',
-  missingDomain: 'user@',
-  missingLocalPart: '@example.com',
-  doubleAt: 'user@@example.com',
-  withWhitespace: 'user name@example.com',
-  malformedDomainDots: 'user@example..com',
-  missingDotCom: 'user@example',
+  missingAt: "invalid-email",
+  missingDomain: "user@",
+  missingLocalPart: "@example.com",
+  doubleAt: "user@@example.com",
+  withWhitespace: "user name@example.com",
+  malformedDomainDots: "user@example..com",
+  missingDotCom: "user@example",
 };
 
 export const invalidPhones = {
-  tooShort: '987654321',
-  tooLong: '98765432109',
-  withLetters: '98765abcde',
-  withSpecialChars: '98765$#@!@',
-  allZeros: '0000000000',
+  tooShort: "987654321",
+  allZeros: "0000000000",
 };
