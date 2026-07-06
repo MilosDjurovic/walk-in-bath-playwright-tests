@@ -22,6 +22,8 @@ test.describe("phone validation", () => {
       await form.submitRequestButton.click();
       await expect(form.phoneErrorMessage).toBeVisible();
       await expectPhoneError(form, "invalid");
+      await expect(landingFormPage.page).not.toHaveURL(/\/thankyou$/);
+      await expect(landingFormPage.thankYouHeading).not.toBeVisible();
     });
   });
 });

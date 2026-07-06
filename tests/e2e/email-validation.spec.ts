@@ -1,4 +1,4 @@
-import { test } from "../fixtures/testFixtures";
+import { expect, test } from "../fixtures/testFixtures";
 import { invalidEmailValues } from "../fixtures/formData";
 import {
   expectStableStepIdentity,
@@ -19,6 +19,8 @@ test.describe("email validation", () => {
       await form.emailInput.fill(invalidEmail);
       await form.goToEstimateButton.click();
       await expectStableStepIdentity(form, "contact-details");
+      await expect(form.emailInput).toBeVisible();
+      await expect(form.phoneInput).toBeHidden();
     });
   });
 });
