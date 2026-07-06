@@ -1,14 +1,10 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 const OUT_OF_AREA_MESSAGE_TEXT =
   "Sorry, unfortunately we don’t yet install in your area but if you’d like us to notify you when we do please enter your email address below";
 const OUT_OF_AREA_THANK_YOU_MESSAGE_TEXT =
   "Thank you for your interest, we will contact you when our service becomes available in your area!";
 const VARIANT_SELECTION_ERROR_MESSAGE_TEXT = "Choose one of the variants.";
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 export type FormLocators = {
   container: Locator;
@@ -31,14 +27,12 @@ export type FormLocators = {
 };
 
 export class LandingFormPage {
-  readonly url: string;
   readonly page: Page;
   readonly form1: FormLocators;
   readonly form2: FormLocators;
   readonly thankYouHeading: Locator;
 
   constructor(page: Page) {
-    this.url = process.env.PLAYWRIGHT_BASE_URL ?? "https://test-qa.capslock.global/";
     this.page = page;
     this.form1 = this.buildFormLocators("#form-container-1");
     this.form2 = this.buildFormLocators("#form-container-2");
@@ -48,13 +42,7 @@ export class LandingFormPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto(this.url);
-  }
-
-  async expectAtBaseUrl(): Promise<void> {
-    await expect(this.page).toHaveURL(
-      new RegExp(`^${escapeRegExp(this.url)}(?:[?#].*)?$`),
-    );
+    await this.page.goto("/");
   }
 
   private buildFormLocators(containerSelector: string): FormLocators {

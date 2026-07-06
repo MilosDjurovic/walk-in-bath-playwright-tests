@@ -1,9 +1,9 @@
-import { expect, test } from "../fixtures/test";
+import { expect, test } from "../fixtures/testFixtures";
 import { invalidZipCodeValues } from "../fixtures/formData";
 
-test.describe("ZIP code step", () => {
+test.describe("zip validation", () => {
   invalidZipCodeValues.forEach((invalidZipCode) => {
-    test(`rejects invalid ZIP code: ${invalidZipCode}`, async ({
+    test(`should reject invalid ZIP code: ${invalidZipCode}`, async ({
       landingFormPage,
       submissionData,
     }) => {

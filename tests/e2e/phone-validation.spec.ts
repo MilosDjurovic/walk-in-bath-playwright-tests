@@ -1,15 +1,15 @@
-import { expect, test } from "../fixtures/test";
+import { expect, test } from "../fixtures/testFixtures";
 import { invalidPhoneValues } from "../fixtures/formData";
 import {
   enterPhoneNumber,
   expectPhoneError,
   openPhoneStepFromContactDetails,
   reachContactDetailsStep,
-} from "./helpers/landingFormFlow";
+} from "./helpers/landingFormFlowHelpers";
 
 test.describe("phone validation", () => {
   invalidPhoneValues.forEach((invalidPhone) => {
-    test(`blocks progression for invalid phone number: ${invalidPhone}`, async ({
+    test(`should block progression for invalid phone number: ${invalidPhone}`, async ({
       landingFormPage,
       submissionData,
     }) => {

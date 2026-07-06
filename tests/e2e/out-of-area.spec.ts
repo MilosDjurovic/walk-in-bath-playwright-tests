@@ -1,7 +1,7 @@
-import { expect, test } from "../fixtures/test";
+import { expect, test } from "../fixtures/testFixtures";
 import { zipCodes } from "../fixtures/formData";
 
-test("user with out-of-area zip code sees unavailable service flow", async ({
+test("should show unavailable service flow for out-of-area ZIP", async ({
   landingFormPage,
   submissionData,
 }) => {
@@ -17,6 +17,6 @@ test("user with out-of-area zip code sees unavailable service flow", async ({
   await form.outOfAreaEmailInput.fill(submissionData.email);
   await form.outOfAreaSubmitButton.click();
 
-  await landingFormPage.expectAtBaseUrl();
+  await expect(landingFormPage.page).toHaveURL(/\/$/);
   await expect(form.outOfAreaThankYouMessage).toBeVisible();
 });
