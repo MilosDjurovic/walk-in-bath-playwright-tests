@@ -1,32 +1,79 @@
+export const interestOptions = [
+  "Independence",
+  "Safety",
+  "Therapy",
+  "Other",
+] as const;
+export type InterestOption = (typeof interestOptions)[number];
+
+export const propertyTypeOptions = [
+  "Owned House / Condo",
+  "Rental Property",
+  "Mobile Home",
+] as const;
+export type PropertyTypeOption = (typeof propertyTypeOptions)[number];
+
 export type WalkInBathSubmissionData = {
   zipCode: string;
-  interest: 'Independence' | 'Safety' | 'Therapy' | 'Other';
-  propertyType: 'Owned House / Condo' | 'Rental Property' | 'Mobile Home';
+  interest: InterestOption;
+  propertyType: PropertyTypeOption;
   fullName: string;
   email: string;
   phone: string;
 };
 
 export const validSubmissionData: WalkInBathSubmissionData = {
-  zipCode: '68901',
-  interest: 'Independence',
-  propertyType: 'Owned House / Condo',
-  fullName: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '4025551212',
+  zipCode: "68901",
+  interest: "Independence",
+  propertyType: "Owned House / Condo",
+  fullName: "John Doe",
+  email: "john.doe@example.com",
+  phone: "4025551212",
 };
 
 export const zipCodes = {
-  serviceAvailable: '68901',
-  outOfArea: '11111',
-  invalidLength: '123456',
+  serviceAvailable: "68901",
+  outOfArea: "11111",
 };
+
+export const invalidZipCodes = {
+  tooShort: "1234",
+  tooLong: "123456",
+  nonDigit: "12a45",
+};
+
+export const invalidZipCodeValues = [
+  invalidZipCodes.tooShort,
+  invalidZipCodes.tooLong,
+  invalidZipCodes.nonDigit,
+] as const;
 
 export const invalidEmails = {
-  missingAt: 'invalid-email',
+  missingAt: "invalid-email",
+  missingDomain: "user@",
+  missingLocalPart: "@example.com",
+  doubleAt: "user@@example.com",
+  withWhitespace: "user name@example.com",
+  malformedDomainDots: "user@example..com",
+  missingDotCom: "user@example",
 };
 
+export const invalidEmailValues = [
+  invalidEmails.missingAt,
+  invalidEmails.missingDomain,
+  invalidEmails.missingLocalPart,
+  invalidEmails.doubleAt,
+  invalidEmails.withWhitespace,
+  invalidEmails.malformedDomainDots,
+  invalidEmails.missingDotCom,
+] as const;
+
 export const invalidPhones = {
-  tooShort: '123456789',
-  withLetters: '12345abcde',
+  tooShort: "987654321",
+  allZeros: "0000000000",
 };
+
+export const invalidPhoneValues = [
+  invalidPhones.tooShort,
+  invalidPhones.allZeros,
+] as const;

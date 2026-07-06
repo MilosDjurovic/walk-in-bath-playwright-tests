@@ -1,17 +1,31 @@
-import { expect, test } from '../fixtures/test';
+import { expect, test } from "../fixtures/test";
+import {
+  enterPhoneNumber,
+  openPhoneStepFromContactDetails,
+  reachContactDetailsStep,
+} from "./helpers/landingFormFlow";
 
-test('submits successfully for service-available ZIP and redirects to thank-you page', async ({
-  landingFormPage,
-  submissionData,
-}) => {
-  await landingFormPage.completeFlowBeforePhoneStep(
-    submissionData.zipCode,
-    submissionData.fullName,
-    submissionData.email,
-  );
-  await landingFormPage.fillPhone(submissionData.phone);
-  await landingFormPage.submitPhoneStep();
+const formCases = [
+  { formKey: "form1" as const, formLabel: "form container 1" },
+  { formKey: "form2" as const, formLabel: "form container 2" },
+];
 
-  await expect(landingFormPage.page).toHaveURL(/\/thankyou$/);
-  await expect(landingFormPage.page.getByRole('heading', { name: 'Thank you!' })).toBeVisible();
+formCases.forEach(({ formKey, formLabel }) => {
+  test(`submits successfully for service-available ZIP using ${formLabel}`, async ({
+    landingFormPage,
+    submissionData,
+    page,
+  }) => {
+    const form = landingFormPage[formKey];
+
+    await reachContactDetailsStep(form, submissionData);
+    await openPhoneStepFromContactDetails(form, submissionData);
+
+    await enterPhoneNumber(form, submissionData.phone);
+    await form.submitRequestButton.click();
+
+    await expect(page).toHaveURL(/\/thankyou$/);
+    await expect(landingFormPage.thankYouHeading).toBeVisible();
+    await expect(landingFormPage.thankYouHeading).toHaveText("Thank you!");
+  });
 });

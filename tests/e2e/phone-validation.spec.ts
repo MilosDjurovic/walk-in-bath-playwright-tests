@@ -1,25 +1,27 @@
-import { expect, test } from '../fixtures/test';
-import { invalidPhones } from '../fixtures/formData';
+import { expect, test } from "../fixtures/test";
+import { invalidPhoneValues } from "../fixtures/formData";
+import {
+  enterPhoneNumber,
+  expectPhoneError,
+  openPhoneStepFromContactDetails,
+  reachContactDetailsStep,
+} from "./helpers/landingFormFlow";
 
-test('prevents submission when phone number is not exactly 10 digits', async ({
-  landingFormPage,
-  submissionData,
-}) => {
-  await landingFormPage.completeFlowBeforePhoneStep(
-    submissionData.zipCode,
-    submissionData.fullName,
-    submissionData.email,
-  );
-  await landingFormPage.fillPhone(invalidPhones.tooShort);
-  await landingFormPage.submitPhoneStep();
+test.describe("phone validation", () => {
+  invalidPhoneValues.forEach((invalidPhone) => {
+    test(`blocks progression for invalid phone number: ${invalidPhone}`, async ({
+      landingFormPage,
+      submissionData,
+    }) => {
+      const form = landingFormPage.form1;
 
-  await expect
-    .poll(async () => landingFormPage.isThankYouPage())
-    .toBeFalsy();
-  await expect
-    .poll(async () => landingFormPage.isPhoneStepVisible())
-    .toBeTruthy();
+      await reachContactDetailsStep(form, submissionData);
+      await openPhoneStepFromContactDetails(form, submissionData);
 
-  const phoneValue = await landingFormPage.getPhoneInputValue();
-  expect(phoneValue.includes('_')).toBe(true);
+      await enterPhoneNumber(form, invalidPhone);
+      await form.submitRequestButton.click();
+      await expect(form.phoneErrorMessage).toBeVisible();
+      await expectPhoneError(form, "invalid");
+    });
+  });
 });
