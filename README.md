@@ -63,14 +63,16 @@ npm run test:report
 ├── tests/
 │   ├── e2e/
 │   │   ├── email-validation.spec.ts
-│   │   ├── happy-path-available.spec.ts
+│   │   ├── helpers/
+│   │   │   └── landingFormFlowHelpers.ts
+│   │   ├── service-available-submission.spec.ts
 │   │   ├── out-of-area.spec.ts
 │   │   ├── phone-validation.spec.ts
-│   │   ├── required-fields.spec.ts
+│   │   ├── required-fields-and-recovery.spec.ts
 │   │   └── zip-validation.spec.ts
 │   ├── fixtures/
 │   │   ├── formData.ts
-│   │   └── test.ts
+│   │   └── testFixtures.ts
 │   └── pages/
 │       └── LandingFormPage.ts
 ├── playwright.config.ts
@@ -80,13 +82,14 @@ npm run test:report
 
 ## Test Architecture Notes
 
-- Setup reuse is implemented with Playwright fixtures in `tests/fixtures/test.ts` via `test.extend`.
+- Setup reuse is implemented with Playwright fixtures in `tests/fixtures/testFixtures.ts` via `test.extend`.
 - Shared context (page object + canonical test data) is injected into tests rather than manually initialized in each spec.
 - Fixture data is deterministic by default for reproducible failures; randomized fixture values are available via `PLAYWRIGHT_RANDOMIZE_DATA=true` when broader coverage is needed.
-- Shared flow helpers in `tests/e2e/helpers/landingFormFlow.ts` standardize repeated multi-step navigation and masked phone typing to reduce duplication and flaky input behavior, while assertions remain in specs for readability.
+- Shared flow helpers in `tests/e2e/helpers/landingFormFlowHelpers.ts` standardize repeated multi-step navigation and masked phone typing to reduce duplication and flaky input behavior, while assertions remain in specs for readability.
 - Assertions are kept in test files only.
 - `LandingFormPage` contains actions and state accessors with single-responsibility methods.
-- In a few transition-sensitive checks (notably in `required-fields.spec.ts`), short explicit waits are used intentionally. While fixed waits are generally a bad practice, they are necessary here to let UI transitions settle and produce more precise assertion results.
+- In transition-sensitive checks, short stabilization waits are used inside `expectStableStepIdentity` in `tests/e2e/helpers/landingFormFlowHelpers.ts` to avoid false positives caused by transient UI frames.
+- Playwright currently runs a single `chromium` project (configured in `playwright.config.ts`).
 
 ## Scenarios Considered
 
@@ -103,9 +106,9 @@ npm run test:report
 
 Implemented top 5 scenarios:
 
-1. `happy-path-available.spec.ts`
+1. `service-available-submission.spec.ts`
 2. `out-of-area.spec.ts`
-3. `required-fields.spec.ts`
+3. `required-fields-and-recovery.spec.ts`
 4. `email-validation.spec.ts`
 5. `phone-validation.spec.ts`
 
@@ -114,6 +117,7 @@ Additional implemented guardrail scenario:
 6. `zip-validation.spec.ts` (grouped ZIP-step coverage for both required and exact-5-digit validation)
 
 Optional defect-focused regression scenarios can be added later (for example, for bug #10).
+
 Selection rationale:
 
 - These scenarios validate the core business path and highest-risk validation gates.
@@ -206,11 +210,27 @@ Selection rationale:
 GitHub Actions workflow is included in `.github/workflows/playwright.yml` and runs tests on push and pull requests to `main`.
 You can also run it manually from **Actions -> Playwright Tests -> Run workflow** and provide any branch, tag, or commit SHA in the `branch` input.
 
-## Future Improvements (2-4)
+## Future Improvements (Top 4 Prioritized)
 
-1. Add mobile-device project coverage after stabilizing selectors against responsive variants.
-2. Add lightweight data factories for additional edge cases (boundary ZIP/phone/email sets).
-3. Add linting/formatting checks (ESLint + Prettier) in CI for stricter code quality gates.
-4. Add trace-on-retry triage helper scripts for faster failure analysis.
-5. Add a scroll-position assertion to verify that the active multi-step form remains the viewport focus after each step transition. (bug #10)
-6. Optionally quarantine known product defects with `test.fixme` (with linked defect IDs) so CI can stay stable while retaining explicit defect coverage in the suite.
+From the proposed improvement candidates, the following 4 are the most relevant for this project right now based on delivery impact, CI safety, and maintainability:
+
+1. **Smoke suite as a PR gate**
+
+Run smoke tests automatically on pull requests and block merges when critical scenarios fail.
+
+2. **Test tagging**
+
+Add tags such as `@smoke`, `@regression`, and `@critical` to support targeted test execution and make PR/scheduled pipelines practical.
+
+3. **Scheduled test runs**
+
+Configure scheduled smoke and regression runs to detect regressions outside active development windows.
+
+4. **API-level coverage where possible**
+
+Move suitable validations from UI tests to API checks to reduce execution time and improve test stability.
+
+Prioritization rationale:
+
+- Items 1-3 work together as an immediate quality gate strategy (selection + trigger + enforcement).
+- Item 4 improves long-term speed and reliability by reducing dependence on slower, more brittle UI flows.

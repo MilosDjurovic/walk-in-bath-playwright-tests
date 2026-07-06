@@ -1,10 +1,13 @@
-import { expect, test } from "../fixtures/test";
+import { expect, test } from "../fixtures/testFixtures";
 import { invalidEmailValues } from "../fixtures/formData";
-import { reachContactDetailsStep } from "./helpers/landingFormFlow";
+import {
+  expectStableStepIdentity,
+  reachContactDetailsStep,
+} from "./helpers/landingFormFlowHelpers";
 
 test.describe("email validation", () => {
   invalidEmailValues.forEach((invalidEmail) => {
-    test(`blocks progression for invalid email: ${invalidEmail}`, async ({
+    test(`should block progression for invalid email: ${invalidEmail}`, async ({
       landingFormPage,
       submissionData,
     }) => {
@@ -15,9 +18,8 @@ test.describe("email validation", () => {
       await form.nameInput.fill(submissionData.fullName);
       await form.emailInput.fill(invalidEmail);
       await form.goToEstimateButton.click();
+      await expectStableStepIdentity(form, "contact-details");
       await expect(form.emailInput).toBeVisible();
-      // Allow UI transition to settle before asserting final state.
-      await landingFormPage.page.waitForTimeout(1000);
       await expect(form.phoneInput).toBeHidden();
     });
   });
